@@ -1,0 +1,61 @@
+// Prisma v6 — MongoDB connector
+// Schema sync: npx prisma db push  (prisma migrate is NOT supported for MongoDB)
+// After any schema change: npx prisma generate && npx prisma db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  email        String        @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         Role          @default(USER)
+  status       AccountStatus @default(ACTIVE)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Audit logs where this user was the subject
+  auditLogsAsTarget AuditLog[] @relation("TargetUserLogs")
+  // Audit logs where this user performed the action
+  auditLogsAsActor  AuditLog[] @relation("ActorUserLogs")
+
+  // email already has an index from @unique — no need to add @@index([email])
+  @@index([role])
+  @@index([status])
+  @@map("users")
+}
+
+model AuditLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  action    String   // e.g. "ROLE_CHANGED", "STATUS_CHANGED", "USER_CREATED"
+  targetId  String   @db.ObjectId
+  actorId   String   @db.ObjectId
+  metadata  Json?    // stores { before, after, ip, userAgent } — flexible shape
+  createdAt DateTime @default(now())
+
+  target User @relation("TargetUserLogs", fields: [targetId], references: [id])
+  actor  User @relation("ActorUserLogs",  fields: [actorId],  references: [id])
+
+  @@index([targetId])
+  @@index([actorId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

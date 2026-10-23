@@ -1,0 +1,134 @@
+{
+  "info": {
+    "name": "Role-Based Auth System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "auth-system-collection"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:4000", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Test@1234!\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Test@1234!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/auth/logout",
+            "header": []
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/auth/me",
+            "header": []
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/auth/change-password",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Test@1234!\",\n  \"newPassword\": \"NewPass@5678!\",\n  \"confirmPassword\": \"NewPass@5678!\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/admin/users?page=1&limit=20",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "role", "value": "USER", "disabled": true },
+                { "key": "status", "value": "ACTIVE", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/admin/users/REPLACE_WITH_USER_ID"
+          }
+        },
+        {
+          "name": "Change User Role",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/admin/users/REPLACE_WITH_USER_ID/role",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"ADMIN\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Change User Status",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/admin/users/REPLACE_WITH_USER_ID/status",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"INACTIVE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Audit Logs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/admin/audit-logs?page=1&limit=20",
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

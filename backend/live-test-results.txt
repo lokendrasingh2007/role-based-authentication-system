@@ -1,0 +1,50 @@
+=== Live API Tests ===
+
+PASS  [01] Health check
+PASS  [02] Register 201  [status=201]
+PASS  [02b] Register no passwordHash
+PASS  [02c] Register role=USER
+PASS  [02d] Register sets HttpOnly cookie
+PASS  [03] Duplicate email 409  [status=409]
+PASS  [04] Invalid email 422  [status=422]
+PASS  [05] Weak password 422  [status=422]
+PASS  [06] Admin login 200  [status=200]
+PASS  [06b] Admin login role=ADMIN
+PASS  [06c] Admin login no passwordHash
+PASS  [07] User login 200  [status=200]
+PASS  [07b] User login role=USER
+PASS  [07c] User login no passwordHash
+PASS  [08] GET /me authenticated
+PASS  [08b] GET /me no passwordHash
+PASS  [09] GET /me no-token 401  [status=401]
+PASS  [10] GET /me invalid-token 401  [status=401]
+PASS  [11] USER->admin/users 403  [status=403]
+PASS  [12] USER->audit-logs 403  [status=403]
+PASS  [13] Unauth->admin 401  [status=401]
+PASS  [14] Admin list users 200
+PASS  [14b] List users pagination  [total=17]
+PASS  [14c] List users no passwordHash
+PASS  [15] Admin search  [results=1]
+PASS  [16] Pagination limit=1
+PASS  [17] GET user by ID
+PASS  [17b] GET user no passwordHash
+PASS  [18] Change role USER->ADMIN
+PASS  [19] Admin self-role-change 403  [status=403]
+PASS  [20] Admin self-status-change 403  [status=403]
+PASS  [21] Deactivate user
+PASS  [22] Deactivated login 403  [status=403]
+PASS  [23] Invalid role value 422  [status=422]
+PASS  [24] Audit logs 200
+PASS  [24b] Audit logs have entries  [total=176]
+PASS  [25] Change password valid  [status=200]
+FAIL  [26] Old token invalid after pw change  [status=200]
+PASS  [27] Change pw wrong current 400  [status=400]
+PASS  [28] Change pw mismatch 422  [status=422]
+PASS  [29] Change pw same-as-current 422  [status=422]
+PASS  [30] Logout 200
+PASS  [31] Rate-limit headers present  [remaining=189]
+PASS  [32] MongoDB persistence  [found=1]
+
+───────────────────────────────────────────────────────
+  Total: 44  |  PASS: 43  |  FAIL: 1
+───────────────────────────────────────────────────────
